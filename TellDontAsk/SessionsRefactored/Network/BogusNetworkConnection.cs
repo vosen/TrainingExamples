@@ -5,7 +5,7 @@ namespace SessionsRefactored.Network
 {
   public class BogusNetworkConnection : NetworkConnection
   {
-    public void Send(List<SessionInformationMessage> messages)
+    public void Send(IEnumerable<SessionInformationMessage> messages)
     {
       //bogus
     }

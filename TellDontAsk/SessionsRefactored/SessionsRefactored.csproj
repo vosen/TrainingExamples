@@ -30,20 +30,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Destinations\ConsoleDestination.cs" />
-    <Compile Include="Destinations\FileStorageFormat1.cs" />
-    <Compile Include="Destinations\FileStorageFormat2.cs" />
-    <Compile Include="Destinations\GuiOwnersList.cs" />
-    <Compile Include="Destinations\NetworkConnection.cs" />
-    <Compile Include="Destinations\NetworkPacketBuilder.cs" />
-    <Compile Include="Destinations\PopulationOfOwnersListOnGui.cs" />
-    <Compile Include="Destinations\DevNull.cs" />
-    <Compile Include="DumpDestination.cs" />
+    <Compile Include="GUI\GuiOwnersList.cs" />
+    <Compile Include="Network\NetworkConnection.cs" />
+    <Compile Include="Formatter.cs" />
     <Compile Include="GUI\WpfBasedOwnersList.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Network\BogusNetworkConnection.cs" />

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.FSharp.Core;
 
 namespace SessionsRefactored
 {
@@ -10,11 +11,21 @@ namespace SessionsRefactored
       _sessions.Add(session);
     }
 
-    public void DumpTo(DumpDestination destination)
+    public IEnumerable<T> Convert<T>(System.Func<SessionData, T> converter)
     {
-      foreach (var session in _sessions)
+      foreach (var s in _sessions)
       {
-        session.DumpTo(destination);
+        var option = s.Convert(converter);
+        if(FSharpOption<T>.get_IsSome(option))
+          yield return option.Value;
+      }
+    }
+
+    public void Access(System.Action<SessionData> callb)
+    {
+      foreach (var s in _sessions)
+      {
+        s.Access(callb);
       }
     }
   }

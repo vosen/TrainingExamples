@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SessionsRefactored
 {
@@ -20,12 +21,16 @@ namespace SessionsRefactored
       }
     }
 
-    public void DumpTo(DumpDestination destination)
+    public IEnumerable<T> Convert<T>(Func<SessionData, T> converter)
     {
-      lock (_syncRoot)
-      {
-        _sessions.DumpTo(destination);
-      }
+      Func<SessionData, T> lockedConverter = s => { lock (_syncRoot) { return converter(s); } };
+      return _sessions.Convert(lockedConverter);
+    }
+
+    public void Access(Action<SessionData> callb)
+    {
+      Action<SessionData> lockedAccess = s => { lock (_syncRoot) { callb(s); } };
+      _sessions.Access(lockedAccess);
     }
   }
 }

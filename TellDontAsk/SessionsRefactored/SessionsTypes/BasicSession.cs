@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.FSharp.Core;
 
 namespace SessionsRefactored.SessionsTypes
 {
@@ -11,18 +12,14 @@ namespace SessionsRefactored.SessionsTypes
       _sessionData = sessionData;
     }
 
-    public void DumpTo(DumpDestination destination)
+    FSharpOption<T> Session.Convert<T>(Func<SessionData, T> converter)
     {
-      destination.BeginNewSessionDump();
-      destination.AddId(_sessionData.Id);
-      destination.AddOwner(_sessionData.Owner);
-      destination.AddTarget(_sessionData.Target);
-      destination.EndCurrentSessionDump();
+      return FSharpOption<T>.Some(converter(_sessionData));
     }
 
-    public void DoSomething()
+    public void Access(Action<SessionData> callb)
     {
-      Console.WriteLine("I am doing something, lol!");
+      callb(_sessionData);
     }
   }
 }

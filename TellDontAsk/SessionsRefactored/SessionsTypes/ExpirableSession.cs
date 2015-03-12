@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.FSharp.Core;
 
 namespace SessionsRefactored.SessionsTypes
 {
@@ -13,17 +14,19 @@ namespace SessionsRefactored.SessionsTypes
       _expiryTime = expiryTime;
     }
 
-    public void DumpTo(DumpDestination destination)
+    public bool CanAccess { get { return DateTime.Now < _expiryTime; } }
+
+    public FSharpOption<T> Convert<T>(Func<SessionData, T> converter)
     {
-      if (DateTime.Now < _expiryTime)
-      {
-        _session.DumpTo(destination);
-      }
+      if (this.CanAccess)
+        return _session.Convert(converter);
+      return FSharpOption<T>.None;
     }
 
-    public void DoSomething()
+    public void Access(Action<SessionData> callb)
     {
-      _session.DoSomething();
+      if (this.CanAccess)
+        _session.Access(callb);
     }
   }
 }

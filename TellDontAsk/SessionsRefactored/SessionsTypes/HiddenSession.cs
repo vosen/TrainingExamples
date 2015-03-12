@@ -1,4 +1,7 @@
-﻿namespace SessionsRefactored.SessionsTypes
+﻿using System;
+using Microsoft.FSharp.Core;
+
+namespace SessionsRefactored.SessionsTypes
 {
   public class HiddenSession : Session
   {
@@ -9,15 +12,13 @@
       _session = session;
     }
 
-    public void DumpTo(DumpDestination destination)
+    public FSharpOption<T> Convert<T>(Func<SessionData, T> converter)
     {
-      //It's hidden, remember!!!
+      return FSharpOption<T>.None;
     }
 
-    public void DoSomething()
+    public void Access(Action<SessionData> callb)
     {
-      //Even though it's hidden, it still has a job to do!
-      _session.DoSomething();
     }
   }
 }

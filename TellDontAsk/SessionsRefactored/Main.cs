@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using SessionsRefactored.Destinations;
 using SessionsRefactored.GUI;
 using SessionsRefactored.Network;
@@ -10,41 +11,32 @@ namespace SessionsRefactored
   {
     public void Program()
     {
-      // different destinations where sessions can be dumped:
-      var consoleDestination = new ConsoleDestination();
-      var networkPacketBuilder = new NetworkPacketBuilder();
-      var fileDestination1 = new FileStorageFormat1();
-      var fileDestination2 = new FileStorageFormat2();
-      var devNull = new DevNull();
-      var populationOfOwnersListOnGui = new PopulationOfOwnersListOnGui(new WpfBasedOwnersList());
+      var wpfList = new WpfBasedOwnersList();
 
       ///////////////////////////////////////
       // 1. Hiding access to sessions allows protecting the collection against
       //    concurrent additions with synchronized wrapper
       Sessions sessions = new SynchronizedSessions(new BasicSessions());
-      AddExemplaryDataTo(sessions);
+      AddExempleDataTo(sessions);
 
       ///////////////////////////////////////
       // 2. These two prove that we have eliminated redundancy in:
       //    a) what data belongs to session
       //    b) in which order they are dumped
-      sessions.DumpTo(consoleDestination);
-      sessions.DumpTo(fileDestination1);
+      Console.WriteLine(String.Join(Environment.NewLine, sessions.Convert(Formatter.LineByLine)));
+      File.AppendAllText("zenek.txt", String.Join(Environment.NewLine, sessions.Convert(Formatter.LineByLine)));
 
       ///////////////////////////////////////
       // 3. These three prove that we have not lost flexibility we had with the getters approach:
 
       //    additionally these two always want to write _all_ of the session fields, so they belong to 2.a. as well
-      sessions.DumpTo(fileDestination2); 
-      sessions.DumpTo(networkPacketBuilder);
-      var networkConnection = new BogusNetworkConnection();
-      networkPacketBuilder.SendBuiltPacketsThrough(networkConnection);
-
-      sessions.DumpTo(populationOfOwnersListOnGui);
-      sessions.DumpTo(devNull);
+      File.AppendAllText("lolek.txt", String.Join(Environment.NewLine, sessions.Convert(Formatter.RichFile)));
+      new BogusNetworkConnection().Send(sessions.Convert(Formatter.Network));
+      sessions.Access(d => wpfList.AddVisible(d.Owner));
+      sessions.Convert(Formatter.Null<string>);
     }
 
-    private static void AddExemplaryDataTo(Sessions sessions)
+    private static void AddExempleDataTo(Sessions sessions)
     {
       //basic session
       sessions.Add(new BasicSession(new SessionData()

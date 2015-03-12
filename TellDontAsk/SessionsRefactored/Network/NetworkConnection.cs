@@ -5,6 +5,6 @@ namespace SessionsRefactored.Destinations
 {
   public interface NetworkConnection
   {
-    void Send(List<SessionInformationMessage> messages);
+    void Send(IEnumerable<SessionInformationMessage> messages);
   }
 }

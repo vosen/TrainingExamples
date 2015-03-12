@@ -1,8 +1,11 @@
-﻿namespace SessionsRefactored
+﻿using System;
+using Microsoft.FSharp.Core;
+
+namespace SessionsRefactored
 {
   public interface Session
   {
-    void DumpTo(DumpDestination destination);
-    void DoSomething(); //this is just any other logic
+    FSharpOption<T> Convert<T>(Func<SessionData, T> converter);
+    void Access(Action<SessionData> callb);
   }
 }
